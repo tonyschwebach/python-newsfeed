@@ -36,4 +36,14 @@ db.add_all([
 ])
 db.commit()
 
+# insert votes
+db.add_all([
+  Vote(user_id=1, post_id=2),
+  Vote(user_id=1, post_id=4),
+  Vote(user_id=2, post_id=4),
+  Vote(user_id=3, post_id=4),
+  Vote(user_id=4, post_id=2)
+])
+db.commit()
+
 db.close()
