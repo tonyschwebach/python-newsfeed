@@ -29,3 +29,8 @@ def signup():
   session['user_id'] = newUser.id
   session['loggedIn'] = True
   return jsonify(id = newUser.id)
+
+@bp.route('users/logout',methods=['POST'])
+def logout():
+  session.clear()
+  return '',204
