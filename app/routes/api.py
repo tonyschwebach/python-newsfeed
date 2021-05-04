@@ -29,7 +29,7 @@ def signup():
   session['loggedIn'] = True
   return jsonify(id = newUser.id)
 
-@bp.route('users/logout',methods=['POST'])
+@bp.route('/users/logout',methods=['POST'])
 def logout():
   session.clear()
   return '',204
@@ -75,7 +75,7 @@ def comment():
   return jsonify(id = newComment.id)
 
 # route for upvote
-@bp.route('posts/upvote',methods=['PUT'])
+@bp.route('/posts/upvote',methods=['PUT'])
 def upvote():
   data = request.get_json()
   db = get_db()
@@ -92,4 +92,58 @@ def upvote():
     db.rollback()
     return jsonify(message='Upvote failed'),500
   
+  return '',204
+
+# route for creating post
+@bp.route('/posts',methods=['POST'])
+def create():
+  data = request.get_json()
+  db = get_db()
+
+  try:
+    newPost = Post(
+      title = data['title'],
+      post_url = data['post_url'],
+      user_id = session.get('user_id')
+    )
+
+    db.add(newPost)
+    db.commit()
+  except:
+    print(sys.exc_info()[0])
+    db.rollback()
+    return jsonify(message='Post failed'),500
+  
+  return jsonify(id=newPost.id)
+
+# route for editing a post
+@bp.route('/posts/<id>',methods=['PUT'])
+def update(id):
+  data = request.get_json()
+  db = get_db()
+
+  try:
+    post = db.query(Post).filter(Post.id == id).one()
+    post.title = data['title']
+    db.commit()
+  except:
+    print(sys.exc_info()[0])
+    db.rollback()
+    return jsonify(message='Post not found'),404
+  return '', 204
+
+# route for deleting a post
+@bp.route('posts/<id>',methods=['POST'])
+def delete(id):
+  data = request.get_json()
+  db = get_db()
+
+  try:
+    post = db.query(Post).filter(Post.id == id).one()
+    db.delete(post)
+    db.commit()
+  except:
+    print(sys.exc_info()[0])
+    db.rollback()
+    return jsonify(message='Post not found'),404
   return '',204
