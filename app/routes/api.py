@@ -2,11 +2,13 @@ from flask import Blueprint, request,jsonify, session
 from app.models import User, Post, Comment, Vote
 from app.db import get_db
 import sys
+from app.utils.auth import login_required
 
 bp = Blueprint('api',__name__,url_prefix='/api')
 
 # Route for new user
 @bp.route('/users', methods=['POST'])
+@login_required
 def signup():
   data = request.get_json()
   db = get_db()
@@ -30,12 +32,14 @@ def signup():
   return jsonify(id = newUser.id)
 
 @bp.route('/users/logout',methods=['POST'])
+@login_required
 def logout():
   session.clear()
   return '',204
 
 #  route for user login
 @bp.route('/users/login',methods=['POST'])
+@login_required
 def login():
   data = request.get_json()
   db = get_db()
@@ -56,6 +60,7 @@ def login():
 
 # route for comments
 @bp.route('/comments',methods=['POST'])
+@login_required
 def comment():
   data = request.get_json()
   db = get_db()
@@ -76,6 +81,7 @@ def comment():
 
 # route for upvote
 @bp.route('/posts/upvote',methods=['PUT'])
+@login_required
 def upvote():
   data = request.get_json()
   db = get_db()
@@ -96,6 +102,7 @@ def upvote():
 
 # route for creating post
 @bp.route('/posts',methods=['POST'])
+@login_required
 def create():
   data = request.get_json()
   db = get_db()
@@ -118,6 +125,7 @@ def create():
 
 # route for editing a post
 @bp.route('/posts/<id>',methods=['PUT'])
+@login_required
 def update(id):
   data = request.get_json()
   db = get_db()
@@ -133,7 +141,8 @@ def update(id):
   return '', 204
 
 # route for deleting a post
-@bp.route('posts/<id>',methods=['POST'])
+@bp.route('posts/<id>',methods=['DELETE'])
+@login_required
 def delete(id):
   data = request.get_json()
   db = get_db()
