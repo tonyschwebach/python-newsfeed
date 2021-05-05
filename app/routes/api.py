@@ -8,7 +8,6 @@ bp = Blueprint('api',__name__,url_prefix='/api')
 
 # Route for new user
 @bp.route('/users', methods=['POST'])
-@login_required
 def signup():
   data = request.get_json()
   db = get_db()
@@ -32,14 +31,12 @@ def signup():
   return jsonify(id = newUser.id)
 
 @bp.route('/users/logout',methods=['POST'])
-@login_required
 def logout():
   session.clear()
   return '',204
 
 #  route for user login
 @bp.route('/users/login',methods=['POST'])
-@login_required
 def login():
   data = request.get_json()
   db = get_db()
