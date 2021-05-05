@@ -2,13 +2,19 @@ from flask import Flask
 from app.routes import home, dashboard, api
 from app.db import init_db
 from app.utils import filters
+from os import getenv
+from dotenv import load_dotenv
+
+# load_dotenv()
 
 def create_app(test_config=None):
   # set up app config
   app = Flask(__name__, static_url_path='/')
   app.url_map.strict_slashes = False
   app.config.from_mapping(
-    SECRET_KEY='super_secret_key'
+  #   SECRET_KEY='super_secret_key'
+  # )
+    SECRET_KEY=getenv('SECRET_KEY')
   )
   app.jinja_env.filters['format_url'] = filters.format_url
   app.jinja_env.filters['format_date'] = filters.format_date
