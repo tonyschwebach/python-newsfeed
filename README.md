@@ -50,7 +50,6 @@ Continuing education material provided by 2U.
 This application was built with a Python backend using Flask, Jinja, sqlAlchemy, brcypt, and gunicorn.
 
 
-
 ---
 
 ## Questions
